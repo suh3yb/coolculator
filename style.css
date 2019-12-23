@@ -167,9 +167,10 @@ body {
 }
 
 .github-logo {
-  width: 32px;
-  height: 32px;
+  width: 25px;
+  height: 25px;
   position: absolute;
-  bottom: 32px;
-  left: calc(50vw - 16px);
+  top: calc(50vh - 222px);
+  left: calc(50vw + 74px);
+  opacity: 0.4;
 }
