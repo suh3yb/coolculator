@@ -165,3 +165,11 @@ body {
   box-shadow: none;
   transition: none;
 }
+
+.github-logo {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  bottom: 32px;
+  left: calc(50vw - 16px);
+}
