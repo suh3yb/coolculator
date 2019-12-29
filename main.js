@@ -3,17 +3,23 @@
 class Calculator {
   constructor() {
     this.screen = document.getElementsByClassName('screen')[0];
+    [this.countScreen, this.operatorScreen] = document.getElementsByClassName(
+      'mini-screen'
+    );
     this.characters = document.getElementsByClassName('character');
     this.operators = document.getElementsByClassName('operator');
 
     this.screen.innerText = '0';
+    this.countScreen.innerText = 0;
+    this.operatorScreen.innerText = '=';
     this.output = '0';
-    this.result = '';
     this.operatorPressed = false;
     this.outOfRange = false;
 
-    this.firstNumber = '';
-    this.secondNumber = '';
+    this.numberOne = '';
+    this.numberTwo = '';
+    this.currentOperator = '';
+    this.numberCount = 0;
 
     this.message = '¯\\(ツ)/¯';
   }
@@ -46,13 +52,18 @@ class Calculator {
     } else if (this.output.length < 7) {
       this.output += event.target.innerText;
     }
+    this.countScreen.innerText = this.numberCount;
     this.screen.innerText = this.output;
   }
 
   handleOperator(event) {
-    if (this.outOfRange || this.output === this.message) {
+    if (this.output === this.message) {
       this.reset();
       return;
+    }
+    if (this.outOfRange) {
+      this.output = this.output.substring(1, 8);
+      this.outOfRange = false;
     }
     switch (event.target.innerText) {
       case 'CE':
@@ -67,37 +78,36 @@ class Calculator {
       case '-':
       case '+':
       case '=':
-        this.operatorPressed = true;
         if (this.output.indexOf('.') === this.output.length - 1) {
           this.output = this.output.substring(0, this.output.length - 1);
         }
-        if (this.includesSymbol()) {
-          this.secondNumber = this.output;
-          this.result += this.output;
+        if (!this.operatorPressed && this.currentOperator) {
+          if (this.currentOperator !== '=') {
+            this.countScreen.innerText = ++this.numberCount;
+          }
+          this.numberTwo = this.output;
           this.stringToResult();
-          this.firstNumber = this.output;
         }
-        this.result = this.output + event.target.innerText;
-        this.firstNumber = this.output;
+        this.operatorPressed = true;
+        this.numberOne = this.output;
+        this.currentOperator = event.target.innerText;
+        this.operatorScreen.innerText = this.currentOperator;
+        if (this.numberCount === 0) {
+          this.countScreen.innerText = ++this.numberCount;
+        }
+        if (event.target.innerText === '=') {
+          this.numberCount = 0;
+          this.currentOperator = '';
+        }
         break;
     }
     this.screen.innerText = this.output;
   }
 
-  includesSymbol() {
-    let symbol = false;
-    ['/', 'x', '-', '+'].forEach(operator => {
-      if (this.result.indexOf(operator) !== -1) {
-        symbol = operator;
-      }
-    });
-    return symbol;
-  }
-
   stringToResult() {
-    const x = parseFloat(this.firstNumber);
-    const y = parseFloat(this.secondNumber);
-    switch (this.includesSymbol()) {
+    const x = parseFloat(this.numberOne);
+    const y = parseFloat(this.numberTwo);
+    switch (this.currentOperator) {
       case '/':
         if (y === 0) {
           this.output = this.message;
@@ -123,21 +133,26 @@ class Calculator {
 
   reset() {
     this.screen.innerText = '0';
+    this.countScreen.innerText = 0;
+    this.operatorScreen.innerText = '=';
     this.output = '0';
-    this.result = '';
     this.operatorPressed = false;
     this.outOfRange = false;
 
-    this.firstNumber = '';
-    this.secondNumber = '';
+    this.numberOne = '';
+    this.numberTwo = '';
+    this.currentOperator = '';
+    this.numberCount = 0;
   }
 
-  log(text) {
+  log(text = '') {
     console.log('_______________________', text);
     console.log('output', this.output);
-    console.log('result', this.result);
     console.log('out of range', this.outOfRange);
     console.log('operator pressed', this.operatorPressed);
+    console.log('number1', this.numberOne);
+    console.log('number2', this.numberTwo);
+    console.log('current operator', this.currentOperator);
   }
 }
 
