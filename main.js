@@ -89,7 +89,12 @@ class Calculator {
           this.stringToResult();
         }
         this.operatorPressed = true;
-        this.numberOne = this.output;
+        if (this.outOfRange) {
+          this.numberOne = this.output.substring(1, 8);
+          this.outOfRange = false;
+        } else {
+          this.numberOne = this.output;
+        }
         this.currentOperator = event.target.innerText;
         this.operatorScreen.innerText = this.currentOperator;
         if (this.numberCount === 0) {
