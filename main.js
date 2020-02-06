@@ -61,6 +61,7 @@ class Calculator {
       this.reset();
       return;
     }
+    this.isOutOfRange();
     if (this.outOfRange) {
       this.output = this.output.substring(1, 8);
       this.outOfRange = false;
@@ -134,6 +135,10 @@ class Calculator {
       this.output = 'E' + this.output.substring(0, 7);
       this.outOfRange = true;
     }
+  }
+
+  isOutOfRange() {
+    this.outOfRange = Boolean(this.output.length > 7);
   }
 
   reset() {
